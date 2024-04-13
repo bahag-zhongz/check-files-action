@@ -5,7 +5,7 @@ const fs = require('fs');
 async function checkFileExists(filePath){
   return fs.promises.access(filePath)
   .then(() => {
-    core.info('File ${filepath} exists');
+    core.info('File ${filePath} exists');
     return true;
   })
   .catch(() => {
