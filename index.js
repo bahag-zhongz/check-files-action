@@ -37,7 +37,40 @@ async function checkFileStartsWithHeader(filePath){
     try{
       checkFileExists("LICENSE");
       checkFileExists("README.md");
-      checkFileStartsWithHeader("README.md");
+      if(
+        ! await checkFileStartsWithHeader("README.md")
+      ){
+        // get token for octokit
+        const token = core.getInput("repo-token");
+        const octokit = new github.getOctokit(token);
+
+        //call octokit to create a check with annotation and details
+        const check = await octokit.rest.checks.create({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          name: 'Readme Validator',
+          head_sha: github.context.sha,
+          status: "completed",
+          conclusion: "failure", // Change this based on your check result
+          output: {
+            title: 'README.md must start with a title',
+            summary: "README.md does not start with a header", // Change this as needed
+            annotations: [
+              {
+                path: 'README.md',
+                start_line: 1,
+                end_line: 1,
+                annotation_level: 'failure',
+                message: 'README.md does not start with a header',
+                start_column: 1,
+                end_column: 1,
+              }
+            ]
+
+          }
+        });
+      }
+
     } catch (error){
       core.setFailed(error.message);
     }
