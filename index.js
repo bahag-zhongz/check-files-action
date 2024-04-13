@@ -11,8 +11,7 @@ async function checkFileExists(filePath){
   .catch(() => {
     core.setFailed('File ${filePath} is mandatory');
     return false;
-  })
-
+  });
 }
 
 (
