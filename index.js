@@ -5,11 +5,11 @@ const fs = require('fs');
 async function checkFileExists(filePath){
   return fs.promises.access(filePath)
   .then(() => {
-    core.info('File ${filePath} exists');
+    core.info(`File ${filePath} exists`);
     return true;
   })
   .catch(() => {
-    core.setFailed('File ${filePath} is mandatory');
+    core.setFailed(`File ${filePath} is mandatory`);
     return false;
   });
 }
